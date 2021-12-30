@@ -11,7 +11,6 @@ const ChatScreen = ({navigation, route}) => {
     const [input, setInput] = useState("");
 
     const sendMessage = () => {
-        Keyboard.dismiss();
 
         db.collection('chats').doc(route.params.id).collection('messages').add({
             timestamp: firestoreInstance.FieldValue.serverTimestamp(),
@@ -25,13 +24,15 @@ const ChatScreen = ({navigation, route}) => {
     }
 
     useLayoutEffect(() => {
-        const unsubscribe = db.collection('chats').doc(route.params.id).collection('messages').orderBy('timestamp', 'asc').onSnapshot((snapshot) => setMessages(
-            snapshot.docs.map(doc => ({
+        db.collection("chats").doc(route.params.id).collection("messages").orderBy("timestamp", "asc").onSnapshot((snapshot) => {
+            const messageArray = snapshot.docs.map((doc) => ({
                 id: doc.id,
-                data: doc.data()
+                data: doc.data(),
             }))
-        ))
-        return unsubscribe;
+            setMessages(messageArray);
+        })
+        console.log(messages);
+        
     },[route])
 
     useLayoutEffect(() => {

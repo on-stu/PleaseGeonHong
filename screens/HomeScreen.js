@@ -22,6 +22,8 @@ const HomeScreen = ({navigation}) => {
         data: doc.data(),
       })))
     })
+
+    return unsubscribe;
   }, [])
 
   useLayoutEffect(() => {
